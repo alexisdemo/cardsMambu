@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/Users/alexis.salinas@mambu.com/.dotnet/store/|arch|/|tfm|",
+      "/Users/alexis.salinas@mambu.com/.nuget/packages"
+    ]
+  }
+}

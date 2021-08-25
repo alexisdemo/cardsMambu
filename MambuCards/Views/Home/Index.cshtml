@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <p class="h5">Card Management</p>
+</div>
+
+@if (TempData["withoutContetntPage"] != null && !String.IsNullOrEmpty(TempData["withoutContetntPage"].ToString()) && TempData["withoutContetntPage"].ToString() == "true")
+{
+
+<form class="form-inline" id="loginform" method="post" action="Home/SetParameters">
+    
+        <div class="form-group mb-2">
+            <label for="staticEmail2" >Account</label>
+            <input type="text" class="form-control input-group-lg reg_name" name="accountId" id="accountId">
+        </div>
+    
+            <button type="submit" class="btn btn-primary mb-2">Set Account</button>
+       
+    
+</form>
+
+}
+
+
+@if (!String.IsNullOrEmpty(ViewBag.Error))
+{
+    <div>
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Error <br>
+        </div>
+    </div>
+}
+<table id="myTable" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>cardToken</th>
+            <th>externalReferenceId</th>
+            <th>advice</th>
+            <th>amount</th>
+            <th>status</th>
+            <th>creditDebitIndicator</th>
+            <th>encodedKey</th>
+            <th>Reverse</th>
+            <th>Approve</th>
+        </tr>
+    </thead>
+</table>
+
+<script>$(document).ready(function () {
+    var encodekey = '@ViewBag.object_id';
+            $('#myTable').DataTable({
+                "processing": false, // for show progress bar
+                "serverSide": true, // for process server side
+                "filter": true, // this is for disab({e filter (search box)
+                "orderMulti": false, // for disable multiple column at once
+                "pageLength": 5,
+
+
+                "ajax": {
+                    "url": "/Home/LoadData?encodekey=" + encodekey,
+                    "type": "POST",
+                    "datatype": 'json'
+                },
+
+
+
+                "columns": [
+                    { "data": "cardToken", "autoWidth": true },
+                    { "data": "externalReferenceId", "autoWidth": true },
+                    { "data": "advice", "autoWidth": true },
+                    { "data": "amount", "autoWidth": true },
+                    { "data": "status", "autoWidth": true },
+                    { "data": "creditDebitIndicator", "autoWidth": true },
+                    { "data": "encodedKey", "autoWidth": true },
+                    {
+                        "render": function (data, type, full)
+                        {
+                            if (full.status == "PENDING") {
+                                return '<a class="btn btn-info" href="/Home/Revert?cardToken=' + full.cardToken + '&externalReferenceId=' + full.externalReferenceId + '">Reverse</a>';
+                            }
+                            else {
+                                return '<a class="btn btn-info disabled" href="#">Reverse</a>';
+                            }
+
+                        }
+                    },
+                    {
+                        "render": function (data, type, full) {
+                            if (full.status == "PENDING") {
+
+                                return '<a class="btn btn-info" href="/Home/Approve?cardToken=' + full.cardToken + '&externalReferenceId=' + full.externalReferenceId + '">Approve</a>';
+                            }
+                            else {
+
+                                return '<a class="btn btn-info disabled" href="#">Approve</a>';
+                            }
+                        }
+                    },
+                ]
+
+            });
+
+
+
+
+
+
+
+
+ 
+
+
+        });</script>
